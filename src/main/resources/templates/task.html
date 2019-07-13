@@ -5,6 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<p th:text="'new! '+ ${taskId}"/>
+<h1 th:text="'Task: '+ ${taskId}"></h1>
+
+<form th:action="${'/task/'+ taskId}" method="post">
+    <input name="time" type="number" placeholder="Add time">
+    <button>Add</button>
+</form>
 </body>
 </html>

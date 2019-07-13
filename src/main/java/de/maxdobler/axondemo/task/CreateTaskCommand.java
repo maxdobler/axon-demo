@@ -1,4 +1,4 @@
-package de.maxdobler.axondemo;
+package de.maxdobler.axondemo.task;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 

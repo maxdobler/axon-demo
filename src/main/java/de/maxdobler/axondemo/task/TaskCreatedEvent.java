@@ -1,4 +1,4 @@
-package de.maxdobler.axondemo;
+package de.maxdobler.axondemo.task;
 
 public class TaskCreatedEvent {
 
@@ -12,5 +12,13 @@ public class TaskCreatedEvent {
     public String getId() {
 
         return id;
+    }
+
+
+    @Override
+    public String toString() {
+
+        return "TaskCreatedEvent{"
+            + "id='" + id + '\'' + '}';
     }
 }
