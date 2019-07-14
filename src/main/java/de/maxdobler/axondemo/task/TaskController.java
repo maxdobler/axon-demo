@@ -2,6 +2,8 @@ package de.maxdobler.axondemo.task;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
+import org.axonframework.queryhandling.QueryGateway;
+
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 
 @Controller
@@ -20,28 +26,33 @@ import java.util.UUID;
 public class TaskController {
 
     private final CommandGateway commandGateway;
+    private final QueryGateway queryGateway;
 
-    public TaskController(CommandGateway commandGateway) {
+    public TaskController(CommandGateway commandGateway, QueryGateway queryGateway) {
 
         this.commandGateway = commandGateway;
+        this.queryGateway = queryGateway;
     }
 
     @PostMapping("/{id}")
     String updateTask(@PathVariable("id") String id,
-        @RequestParam("time") Integer time, Model model) {
+        @RequestParam("time") Integer time) {
 
         var command = new AddTimeCommand(id, time);
         commandGateway.sendAndWait(command);
-        model.addAttribute("taskId", id);
 
-        return "task";
+        return "redirect:/task/" + id;
     }
 
 
     @GetMapping("/{id}")
-    public String task(Model model) {
+    public String task(@PathVariable("id") String taskId, Model model) throws InterruptedException, ExecutionException,
+        TimeoutException {
 
-        model.addAttribute("taskId", "abc");
+        var taskDto = queryGateway.query(new GetTaskQuery(taskId), TaskDto.class).get(1L, SECONDS);
+
+        model.addAttribute("taskId", taskDto.id);
+        model.addAttribute("timelogs", taskDto.timeLogs);
 
         return "task";
     }

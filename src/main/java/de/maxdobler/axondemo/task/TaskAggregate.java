@@ -86,4 +86,10 @@ public class TaskAggregate {
 
         LOG.info("[Event] {}: {}", event.getClass().getSimpleName(), event);
     }
+
+
+    public String getId() {
+
+        return id;
+    }
 }

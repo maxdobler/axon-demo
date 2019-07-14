@@ -11,5 +11,9 @@
     <input name="time" type="number" placeholder="Add time">
     <button>Add</button>
 </form>
+
+<ul>
+    <li th:each="timelog : ${timelogs}" th:text="${timelog.time}"></li>
+</ul>
 </body>
 </html>
